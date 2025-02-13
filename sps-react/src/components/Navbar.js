@@ -18,28 +18,9 @@ const Navbar = () => {
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
-              Aplicación
+              SPS TEST
             </Link>
           </Typography>
-          {!isAuthenticated() ? (
-            <>
-              <Button color="inherit" component={Link} to="/signin">
-                Iniciar sesión
-              </Button>
-              <Button color="inherit" component={Link} to="/register">
-                Registrarse
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button color="inherit" component={Link} to="/users">
-                Usuarios
-              </Button>
-              <Button color="inherit" onClick={handleLogout}>
-                Cerrar sesión
-              </Button>
-            </>
-          )}
         </Toolbar>
       </Container>
     </AppBar>

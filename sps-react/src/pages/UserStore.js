@@ -1,45 +1,54 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Para redirigir después de login
-import { loginUser } from "../services/UserService"; // Usamos el servicio de login
-import { saveToken } from "../utils/auth"; // Importamos la función para guardar el token
-import { Container, Form, Button, Alert, Spinner } from "react-bootstrap"; // Importamos componentes de React-Bootstrap
-import "bootstrap/dist/css/bootstrap.min.css";
+import { registerUser } from "../services/UserService"; // Importamos el servicio para el registro
+import { useNavigate } from "react-router-dom"; // Usamos el hook useNavigate para redirigir
+import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
+import { Link } from "react-router-dom"; // Si usas React Router para la navegación
+import "bootstrap/dist/css/bootstrap.min.css"; // Importa el CSS de Bootstrap
 
-const SignIn = () => {
+
+const UserStore = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate();
 
-  // Función que maneja el submit del formulario de login
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita que se recargue la página
-    setIsLoading(true);
+    e.preventDefault();
+    setIsSubmitting(true);
 
     try {
-      // Intentamos loguear al usuario
-      const token = await loginUser(email, password); // Llamamos al servicio de login
-      saveToken(token); // Guardamos el token en localStorage
-      setIsLoading(false);
-      navigate("/users"); // Redirigimos a la página de usuarios después de login exitoso
-    } catch (err) {
-      setIsLoading(false);
-      setError("Credenciales incorrectas. Intenta de nuevo.");
+      await registerUser(name, email, password); // Intentamos registrar al usuario
+      alert("Usuario registrado exitosamente");
+      navigate("/users"); // Redirigimos al usuario a la página de inicio de sesión
+    } catch (error) {
+      alert("Error: " + error.message); // Si hay error, mostramos un mensaje
     }
+
+    setIsSubmitting(false);
   };
 
   return (
     <Container className="mt-5" style={{ maxWidth: "400px" }}>
       <div className="p-4 shadow rounded bg-white">
-        <h2 className="text-center mb-4">Iniciar Sesión en App</h2>
+        <h2 className="text-center mb-4">Registrar Usuario</h2>
 
         <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="formName">
+            <Form.Label>Nombre</Form.Label>
+            <Form.Control
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="formEmail">
             <Form.Label>Correo Electrónico</Form.Label>
             <Form.Control
               type="email"
-              placeholder="Correo"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -50,7 +59,6 @@ const SignIn = () => {
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -64,12 +72,12 @@ const SignIn = () => {
           )}
 
           <Button
-            variant="primary"
             type="submit"
+            variant="primary"
             className="w-100"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            {isLoading ? (
+            {isSubmitting ? (
               <>
                 <Spinner
                   as="span"
@@ -79,10 +87,10 @@ const SignIn = () => {
                   aria-hidden="true"
                   className="me-2"
                 />
-                Cargando...
+                Registrando...
               </>
             ) : (
-              "Iniciar sesión"
+              "Registrar"
             )}
           </Button>
         </Form>
@@ -91,4 +99,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default UserStore;

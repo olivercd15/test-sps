@@ -2,18 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchUserById, updateUser } from "../services/UserService"; 
 import Navbar from "../components/Navbar"; 
-import * as Yup from 'yup'; 
-import { Form, Input, Button } from "../components/DefaultStyle"; 
+import { Container, Form, Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css"; // Importa el CSS de Bootstrap
 
-// Esquema de validación con Yup
-const schema = Yup.object().shape({
-  name: Yup.string()
-    .min(3, 'Mínimo 3 caracteres')
-    .required('El nombre es obligatorio'),
-  email: Yup.string()
-    .email('Ingrese un correo electrónico válido')
-    .required('El correo electrónico es obligatorio'),
-});
 
 const UserEdit = () => {
   const { userId } = useParams();
@@ -60,44 +51,42 @@ const UserEdit = () => {
   return (
     <div>
       <Navbar />
-      <div className="container mt-5" style={{ maxWidth: '600px' }}> {/* Ajustamos el tamaño máximo del formulario */}
-        <h2 className="text-center">Editar Usuario</h2>
-        <form schema={schema} onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <Input
-              name="name"
+      <Container className="mt-5" style={{ maxWidth: "600px" }}>
+        <h2 className="text-center mb-4">Editar Usuario</h2>
+
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="formName">
+            <Form.Label>Nombre</Form.Label>
+            <Form.Control
               type="text"
               placeholder="Tu nombre"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              style={{ width: '100%' }} // Controlando el tamaño del input
             />
-          </div>
-          <div className="mb-3">
-            <Input
-              name="email"
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formEmail">
+            <Form.Label>Correo Electrónico</Form.Label>
+            <Form.Control
               type="email"
               placeholder="Tu correo electrónico"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ width: '100%' }} // Controlando el tamaño del input
             />
-          </div>
-          <Button 
-            type="submit" 
-            disabled={isSubmitting} 
-            style={{ 
-              width: '100%', 
-              textAlign: 'center', // Centra el texto
-              marginTop: '20px' // Espaciado superior
-            }}
+          </Form.Group>
+
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-100 mt-3"
+            disabled={isSubmitting}
           >
             {isSubmitting ? "Guardando..." : "Guardar Cambios"}
           </Button>
-        </form>
-      </div>
+        </Form>
+      </Container>
     </div>
   );
 };

@@ -45,7 +45,7 @@ exports.signin = (req, res) => {
 
         if (!passwordIsValid) {
           return res.status(401).send({
-            accessToken: null,
+            token: null,
             message: "Contraseña incorrecta."
           });
         }
@@ -60,7 +60,7 @@ exports.signin = (req, res) => {
           name: user.name,
           email: user.email,
           type: user.type,
-          accessToken: token
+          token: token
         });
       });
     });

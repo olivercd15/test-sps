@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Para redirigir después de login
-import { fetchUsers, deleteUserById } from "../services/UserService"; // Ajustar el servicio para eliminar
-import {
-  Button,
-  CircularProgress,
-  Container,
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  TablePagination,
-} from "@mui/material"; // Material UI
-import { MdEdit, MdDelete } from "react-icons/md"; // Para los iconos de editar y eliminar
-import { Form, Input } from "../components/DefaultStyle"; // Usamos los componentes personalizados
-import ConfirmDialog from "../components/ConfirmDialog"; // Componente de confirmación de eliminación
+import { useNavigate } from "react-router-dom";
+import { fetchUsers, deleteUserById } from "../services/UserService"; 
+import { Button, Container, Table, Row, Col, Spinner, Modal } from "react-bootstrap";
+import { MdEdit, MdDelete } from "react-icons/md";
 import Navbar from "../components/Navbar"; 
 
 const Users = () => {
@@ -27,12 +14,12 @@ const Users = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
-  const navigate = useNavigate(); // Hook para redirigir
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const usersData = await fetchUsers(); // Llamada al servicio para obtener usuarios
+        const usersData = await fetchUsers(); 
         setUsers(usersData);
       } catch (error) {
         setError("Error al cargar usuarios");
@@ -43,14 +30,14 @@ const Users = () => {
   }, []);
 
   const handleEdit = (userId) => {
-    navigate(`/users/${userId}`); // Redirige a la página de edición
+    navigate(`/users/${userId}`);
   };
 
   const handleDelete = async () => {
     setIsSubmitting(true);
     try {
-      await deleteUserById(userToDelete); // Llamada al servicio para eliminar
-      setUsers(users.filter((user) => user.id !== userToDelete)); // Filtra el usuario eliminado
+      await deleteUserById(userToDelete);
+      setUsers(users.filter((user) => user.id !== userToDelete)); 
       setShowConfirmDialog(false);
       setUserToDelete(null);
     } catch (error) {
@@ -60,19 +47,17 @@ const Users = () => {
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage); // Cambia la página
+    setPage(newPage); 
   };
 
   const handleRegister = () => {
-    navigate('/register'); // Redirige a la página de registro
+    navigate('/new'); 
   };
 
   if (loading) {
     return (
-      <Container maxWidth="xs">
-        <Box sx={{ display: "flex", justifyContent: "center", marginTop: 5 }}>
-          <CircularProgress />
-        </Box>
+      <Container className="d-flex justify-content-center mt-5">
+        <Spinner animation="border" variant="primary" />
       </Container>
     );
   }
@@ -80,94 +65,85 @@ const Users = () => {
   return (
     <div>
       <Navbar />
-      <Container maxWidth="lg">
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            marginTop: 5,
-          }}
-        >
-          {/* Botón para registrar un nuevo usuario */}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleRegister()}
-            sx={{ marginBottom: "20px" }}
-          >
-            Nuevo Registro
-          </Button>
+      <Container>
+        <Row className="mt-5">
+          <Col xs={12}>
+            <Button variant="success" onClick={() => handleRegister()} className="mb-3">
+              Nuevo Usuario
+            </Button>
 
-          <h2>Lista de Usuarios</h2>
+            <h2>Lista de Usuarios</h2>
 
-          {/* Tabla de usuarios */}
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Correo Electrónico</TableCell>
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.slice(page * 10, page * 10 + 10).map((user) => (
-                <TableRow hover key={user.id}>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => handleEdit(user.id)}
-                      sx={{ marginRight: 2 }}
-                    >
-                      <MdEdit size={20} />
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => {
-                        setUserToDelete(user.id);
-                        setShowConfirmDialog(true);
-                      }}
-                    >
-                      <MdDelete size={20} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            {/* Tabla de usuarios */}
+            <Table striped bordered hover responsive>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Correo Electrónico</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.slice(page * 10, page * 10 + 10).map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <Button
+                        variant="outline-primary"
+                        onClick={() => handleEdit(user.id)}
+                        className="mr-2"
+                      >
+                        <MdEdit size={20} />
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => {
+                          setUserToDelete(user.id);
+                          setShowConfirmDialog(true);
+                        }}
+                      >
+                        <MdDelete size={20} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
 
-          {/* Paginación */}
-          <TablePagination
-            component="div"
-            count={users.length}
-            rowsPerPage={10}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPageOptions={[]}
-          />
+            {/* Confirmación de eliminación */}
+            <Modal show={showConfirmDialog} onHide={() => setShowConfirmDialog(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Confirmar Eliminación</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                ¿Estás seguro de que deseas eliminar este usuario? Esta acción no podrá ser revertida.
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowConfirmDialog(false)}>
+                  Cancelar
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={handleDelete}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <Spinner animation="border" size="sm" /> : "Eliminar"}
+                </Button>
+              </Modal.Footer>
+            </Modal>
 
-          {/* Confirmación de eliminación */}
-          {showConfirmDialog && (
-            <ConfirmDialog
-              title="Confirmar Eliminación"
-              content={`¿Estás seguro de que deseas eliminar este usuario? Esta acción no podrá ser revertida.`}
-              onCancel={() => setShowConfirmDialog(false)}
-              onConfirm={handleDelete}
-              loading={isSubmitting}
-            />
-          )}
-
-          {error && (
-            <div style={{ color: "red", marginTop: "20px" }}>{error}</div>
-          )}
-        </Box>
+            {/* Error */}
+            {error && (
+              <div style={{ color: "red", marginTop: "20px" }}>{error}</div>
+            )}
+          </Col>
+        </Row>
       </Container>
     </div>
   );
+
+  
 };
 
 export default Users;

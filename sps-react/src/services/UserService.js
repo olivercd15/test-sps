@@ -8,7 +8,7 @@ export const loginUser = async (email, password) => {
     const response = await fetch(`${API_URL}/auth/signin`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json", // Se agrega el header Content-Type
+        "Content-Type": "application/json", 
       },
       body: JSON.stringify({ email, password }),
     });
@@ -18,7 +18,7 @@ export const loginUser = async (email, password) => {
     }
 
     const data = await response.json();
-    return data.accessToken; // Retorna el token JWT
+    return data.token; // Retorna el token JWT
   } catch (error) {
     throw new Error(error.message);
   }
@@ -27,10 +27,17 @@ export const loginUser = async (email, password) => {
 // Función para registrar un usuario
 export const registerUser = async (name, email, password) => {
   try {
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No se pudo obtener el token");
+    }
+
     const response = await fetch(`${API_URL}/users/store`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Access-Token": token
       },
       body: JSON.stringify({ name, email, password, type: "user" }),
     });
@@ -49,15 +56,20 @@ export const registerUser = async (name, email, password) => {
 // Función para obtener todos los usuarios
 export const fetchUsers = async () => {
   try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No se pudo obtener el token");
+    }
+
     const response = await fetch(`${API_URL}/users/list`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("x-access-token")}`, // Aseguramos que se pase el token de autenticación
+        "X-Access-Token": token,
       },
     });
 
     if (!response.ok) {
-      throw new Error("Error al cargar usuarioss");
+      throw new Error("Error al cargar usuarios");
     }
 
     const users = await response.json();
@@ -70,10 +82,16 @@ export const fetchUsers = async () => {
 // Función para obtener un usuario por su ID
 export const fetchUserById = async (userId) => {
   try {
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No se pudo obtener el token");
+    }
+
     const response = await fetch(`${API_URL}/users/${userId}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Aseguramos que se pase el token de autenticación
+        "X-Access-Token": token
       },
     });
 
@@ -91,11 +109,17 @@ export const fetchUserById = async (userId) => {
 // Función para actualizar un usuario
 export const updateUser = async (userId, name, email) => {
   try {
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No se pudo obtener el token");
+    }
+
     const response = await fetch(`${API_URL}/users/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "X-Access-Token": token
       },
       body: JSON.stringify({ name, email }),
     });
@@ -114,10 +138,16 @@ export const updateUser = async (userId, name, email) => {
 // Función para eliminar un usuario
 export const deleteUserById = async (userId) => {
   try {
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No se pudo obtener el token");
+    }
+
     const response = await fetch(`${API_URL}/users/${userId}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Aseguramos que se pase el token de autenticación
+        "X-Access-Token": token 
       },
     });
 

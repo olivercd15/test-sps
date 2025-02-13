@@ -6,6 +6,8 @@ import SignIn from "./pages/SignIn";
 import RegisterForm from "./components/RegisterForm";
 import Users from "./pages/Users";
 import UserEdit from "./pages/UserEdit";
+import UserStore from "./pages/UserStore";
+
 
 // Rutas públicas y privadas
 import PrivateRoute from "./components/PrivateRoute";
@@ -19,8 +21,8 @@ const router = createBrowserRouter([
     element: <PublicRoute component={SignIn} />,
   },
   {
-    path: "/register",
-    element: <PublicRoute component={RegisterForm} />, // Ruta de registro
+    path: "/new",
+    element: <PublicRoute component={UserStore} />, // Ruta de registro
   },
 
   // Rutas privadas (requieren autenticación)
