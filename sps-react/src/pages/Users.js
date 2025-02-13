@@ -46,10 +46,6 @@ const Users = () => {
     setIsSubmitting(false);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage); 
-  };
-
   const handleRegister = () => {
     navigate('/new'); 
   };

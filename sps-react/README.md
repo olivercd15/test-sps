@@ -1,12 +1,12 @@
-# Test para SPS - NUR SRL, desarrollado con React y Vite
+# Test para SPS - NUR SRL, desarrollado con React
 
-Este proyecto es un ejemplo de autenticación y autorización de usuarios utilizando React y Vite
+Este proyecto es un ejemplo de autenticación y autorización de usuarios utilizando React
 
 # Frontend
 
 ## Requisitos Previos
 
-- React y Vite en ejecución
+- React y Bootstrap en ejecución
 
 
 ## Instala dependencias

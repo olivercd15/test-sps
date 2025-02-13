@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 // Importamos las páginas de la aplicación
 import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import RegisterForm from "./components/RegisterForm";
 import Users from "./pages/Users";
 import UserEdit from "./pages/UserEdit";
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <PublicRoute component={SignIn} />,
+  },
+  {
+    path: "/signup",
+    element: <PublicRoute component={SignUp} />,
   },
   {
     path: "/new",

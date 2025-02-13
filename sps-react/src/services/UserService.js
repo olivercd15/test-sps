@@ -24,6 +24,29 @@ export const loginUser = async (email, password) => {
   }
 };
 
+// Función para registrarse en sistema SignUp
+export const registroSignUp = async (name, email, password) => {
+  try {
+
+    const response = await fetch(`${API_URL}/auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, password, type: "user" }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al registrar el usuario");
+    }
+
+    const newUser = await response.json();
+    return newUser;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 // Función para registrar un usuario
 export const registerUser = async (name, email, password) => {
   try {
