@@ -1,7 +1,7 @@
 
-# Test para SPS - NUR SRL, desarrollado con NodeJS y MongoDB
+# Test para SPS - NUR SRL, desarrollado con el Stack MERN (MongoDB, Express, React, NodeJS)
 
-Este proyecto es un ejemplo de autenticación y autorización de usuarios utilizando Node.js, MongoDB, JWT (JSON Web Tokens) y Mongoose.
+Este proyecto es un ejemplo de autenticación y autorización de usuarios utilizando Node.js, MongoDB, JWT (JSON Web Tokens), Mongoose y React.
 
 # Backend
 
@@ -26,7 +26,7 @@ npm run dev
 
 ## Requisitos Previos
 
-- React y Vite en ejecución
+- React y Bootstrap en ejecución
 
 
 ## Instala dependencias
@@ -36,5 +36,5 @@ npm install
 
 ### Run 
 ```
-npm run dev
+npm run start
 ```
